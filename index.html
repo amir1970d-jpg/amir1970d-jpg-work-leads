@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فرصت‌های کاری</title>
+<style>
+:root{--bg:#f3f5f4;--ink:#1b2a2e;--mute:#5d6b6f;--line:#d6dcdb;--card:#fff;--acc:#0f5c63;--new:#c98a12;--bad:#a63a2b}
+@media (prefers-color-scheme:dark){:root{--bg:#121819;--ink:#e6eeee;--mute:#93a3a6;--line:#2a3436;--card:#1a2224;--acc:#5ec2cb;--new:#e2b04a;--bad:#e27d6c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 Tahoma,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:8px 0 2px}
+.sub{color:var(--mute);font-size:14px;margin:0 0 16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chips button{font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+a.row{display:block;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 14px;margin-bottom:8px;color:inherit;text-decoration:none}
+a.row:hover,a.row:focus-visible{border-color:var(--acc);outline:none}
+.t{display:block}
+.m{display:block;font-size:13px;color:var(--mute)}
+.new{color:var(--new);font-weight:bold}
+.empty{padding:24px 0;color:var(--mute)}
+details{margin-top:28px;font-size:14px;color:var(--mute)}
+.ok{color:var(--acc)}.bad{color:var(--bad)}
+</style>
+</head>
+<body>
+<main>
+<h1>فرصت‌های کاری فیلم و تولید محتوا</h1>
+<p class="sub" id="upd"></p>
+<div class="chips" id="chips"></div>
+<div id="list"></div>
+<details id="st"><summary>وضعیت منابع</summary><div id="stbody"></div></details>
+</main>
+<script>
+let data,filter="";
+const $=id=>document.getElementById(id);
+function render(){
+  const today=data.updated;
+  const items=data.items.filter(i=>!filter||i.source===filter);
+  $("list").innerHTML=items.length?"":'<p class="empty">هنوز موردی پیدا نشده. وضعیت منابع را پایین صفحه ببین.</p>';
+  items.forEach(i=>{
+    const a=document.createElement("a");a.className="row";a.href=i.url;a.target="_blank";a.rel="noopener";
+    const t=document.createElement("span");t.className="t";t.textContent=i.title;
+    const m=document.createElement("span");m.className="m";
+    m.textContent=i.source+" — "+new Date(i.found).toLocaleDateString("fa-IR");
+    if(i.found===today){const n=document.createElement("span");n.className="new";n.textContent=" — جدید";m.append(n)}
+    a.append(t,m);$("list").append(a);
+  });
+}
+fetch("leads.json?"+Date.now()).then(r=>r.json()).then(d=>{
+  data=d;
+  $("upd").textContent=d.updated?"آخرین بروزرسانی: "+new Date(d.updated).toLocaleDateString("fa-IR"):"هنوز اجرا نشده";
+  const names=[...new Set(d.items.map(i=>i.source))];
+  [["همه",""],...names.map(n=>[n,n])].forEach(([l,v])=>{
+    const b=document.createElement("button");b.textContent=l;b.setAttribute("aria-pressed",v===filter);
+    b.onclick=()=>{filter=v;[...$("chips").children].forEach(c=>c.setAttribute("aria-pressed",c===b));render()};
+    $("chips").append(b);
+  });
+  $("stbody").innerHTML=d.status.map(s=>s.ok
+    ?`<div class="ok">${s.name}: ${s.found} مورد، ${s.new} جدید</div>`
+    :`<div class="bad">${s.name}: خطا — ${s.error}</div>`).join("")||"—";
+  render();
+}).catch(()=>{$("list").innerHTML='<p class="empty">فایل leads.json خوانده نشد.</p>'});
+</script>
+</body>
+</html>
