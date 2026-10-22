@@ -1,1 +1,22 @@
-{"updated":"","status":[],"items":[]}
+{
+ "updated": "2026-10-22",
+ "status": [
+  {
+   "name": "جابینجا",
+   "ok": false,
+   "error": "403 Client Error: Forbidden for url: https://jobinja.ir/jobs?filters%5Bkeywords%5D%5B0%5D=%D9%81%DB%8C%D9%84%D9%85%D8%B3%D8%A7%D8%B2"
+  },
+  {
+   "name": "پونیشا",
+   "ok": false,
+   "error": "404 Client Error: Not Found for url: https://ponisha.ir/search/%D9%81%DB%8C%D9%84%D9%85%D8%B3%D8%A7%D8%B2"
+  },
+  {
+   "name": "خانه سینما",
+   "ok": true,
+   "found": 0,
+   "new": 0
+  }
+ ],
+ "items": []
+}
