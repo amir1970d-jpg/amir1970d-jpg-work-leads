@@ -1,10 +1,11 @@
 {
- "updated": "2026-11-22",
+ "updated": "2026-11-23",
  "status": [
   {
    "name": "جابینجا",
-   "ok": false,
-   "error": "403 Client Error: Forbidden for url: https://jobinja.ir/jobs?filters%5Bkeywords%5D%5B0%5D=%D9%81%DB%8C%D9%84%D9%85%D8%B3%D8%A7%D8%B2"
+   "ok": true,
+   "found": 0,
+   "new": 0
   },
   {
    "name": "پونیشا",
